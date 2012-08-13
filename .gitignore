@@ -12,6 +12,8 @@ lib/bundler/man
 pkg
 rdoc
 spec/reports
+spec
 test/tmp
 test/version_tmp
 tmp
+run.rb
