@@ -5,20 +5,17 @@ module Mysms
 			host = "mysms.com.tw"
 			port = "80"
 
-			#send_msg=[user,passwd,message,number].join("&")
 			send_msg="CID=#{user}&CPW=#{passwd}&M=#{message}&N=#{number}"
 			
 			if type == "y"
 				send_msg+="&T=#{time}"
 			end 
 			
-			#puts send_msg
 			client = TCPSocket.open(host,port)
 			optval = client.getsockopt(Socket::SOL_TCP, 11) 
   			state = optval.unpack "i" 
   			num = send_msg.length
 
-  			#puts send_msg
   			if state
   				msgdata = ""
   				msgdata += "POST /mysms/ApSendSMS.php HTTP/1.1\r\n"
@@ -30,17 +27,11 @@ module Mysms
   				client.write(msgdata)
 
   				resp_str = ""
-  				while line = client.gets   # Loop through get results
+  				while line = client.gets 
 					resp_str += line
-					puts line.chop      # Print Result
 				end
   			end
-  			#puts num
-
-  			puts msgdata
-
-  			puts resp_str
-			client.close
+  			client.close
 		end
 	end
 end
