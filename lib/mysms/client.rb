@@ -1,12 +1,14 @@
+# encoding: utf-8
 require 'socket'
 module Mysms
 	class Client
+
 		def send_sms(user,passwd,message,number,time,type)
 			host = "mysms.com.tw"
 			port = "80"
 
 			send_msg="CID=#{user}&CPW=#{passwd}&M=#{message}&N=#{number}"
-			
+						
 			if type == "y"
 				send_msg+="&T=#{time}"
 			end 
@@ -14,7 +16,9 @@ module Mysms
 			client = TCPSocket.open(host,port)
 			optval = client.getsockopt(Socket::SOL_TCP, 11) 
   			state = optval.unpack "i" 
-  			num = send_msg.length
+  			num = send_msg.size-message.size+message.bytesize
+
+  			#puts send_msg
 
   			if state
   				msgdata = ""
@@ -25,13 +29,14 @@ module Mysms
 				msgdata += "Connection: Close\r\n\r\n"
 				msgdata += "#{send_msg}\r\n"
   				client.write(msgdata)
-
+  				puts msgdata
   				resp_str = ""
   				while line = client.gets 
 					resp_str += line
 				end
   			end
   			client.close
+  			#puts resp_str
 		end
 	end
 end
